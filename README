@@ -1,0 +1,9 @@
+This script can be used to analyze CoC wars for player effectiveness
+
+--new-war: Allows the user to create a new war data file
+
+--analyze: analyze war files listed after --analyze
+
+--analyze-all: analyze all war files found
+
+--analyze-recent: analyze the past 3 weeks worth of wars
