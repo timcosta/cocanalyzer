@@ -9,7 +9,7 @@ node index.js --analyze <list of json files>
 node index.js --analyze newb.json ARMs_Revenge.json
 
 --analyze-all: analyze all war files found
-not implemented
+node index.js --analyze-all
 
---analyze-recent: analyze the past 3 weeks worth of wars
-not implemented
+--analyze-recent: Analyze last X weeks of war
+node index.js --analyze-recent 3

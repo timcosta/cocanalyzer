@@ -33,6 +33,151 @@ readFiles = (fileArray,callback) ->
 					handleError err
 					cb1 null,JSON.parse data
 	async.parallel readFxns, callback
+	
+analyzeWars = (wars,cb0) ->
+	userMap = {}
+	warNames = []
+	
+	for war in wars
+		
+		warNames.push war.opponent
+		war.targetStars = targetStarMultiplier * war.size
+		painLevel = if war.outcome then 1 else warLossMultiplier
+		
+		for player in war.players
+			if not (player.name in exclusionList)
+				player.percentile = player.rank/war.size
+				
+				if not userMap[player.name]?
+					userMap[player.name] = 
+						name: player.name
+						totalStars: 0
+						newStars: 0
+						zeroStarAttacks: 0
+						threeStarAttacks: 0
+						attacksMissed: 0
+						warCount: 0
+						attackCount: 0
+						myRankSum: 0
+						opponentRankSum: 0
+						illegalAttacks: 0
+						totalScore: 0
+						baseDeductions: 0
+						baseBonuses: 0
+						
+				userMap[player.name].warCount++
+				userMap[player.name].myRankSum += player.rank
+				
+				if player.attacks.length < 2
+					diff = 2 - player.attacks.length
+					userMap[player.name].attacksMissed += diff						
+					userMap[player.name].totalScore -= diff*missedAttackValue*painLevel
+					
+				for attack in player.attacks
+					userMap[player.name].attackCount++
+					if attack.totalStars is 0
+						userMap[player.name].zeroStarAttacks++
+					else if attack.totalStars is 3
+						userMap[player.name].threeStarAttacks++
+					userMap[player.name].opponentRankSum += attack.opponentRank
+					userMap[player.name].totalStars += attack.totalStars
+					userMap[player.name].newStars += attack.newStars
+					
+					attack.illegal = false
+					if player.percentile < 0.2
+						# TOP END
+						attack.illegal = attack.illegal || attack.opponentRank > player.rank + war.size*0.3
+						if not attack.illegal and attack.totalStars > 0
+							if player.name is targetPlayerName
+								console.log "Bonus attack up"
+							userMap[player.name].totalScore += topPercentageBonusValue
+					else if player.percentile > 0.8
+						# BOTTOM END
+						attack.illegal = attack.illegal || attack.opponentRank < player.rank - war.size*0.3
+					else
+						# ERRBODY IN BETWEEN
+						attack.illegal = attack.opponentRank <= player.rank and 0.8 > player.percentile > 0.2
+					
+					if attack.illegal
+						userMap[player.name].illegalAttacks++
+				
+				if player.name is targetPlayerName
+					console.log player.attacks.map((a) -> if a.totalStars is 3 then a.totalStars else a.newStars).sum(),'-',player.starsAgainst
+					
+				userMap[player.name].totalScore += player.attacks.map((a) -> if a.totalStars is 3 then a.totalStars else a.newStars).sum() - (player.starsAgainst || 0)
+				
+				if player.rank <= 0.1*war.size 
+					if player.starsAgainst > 1
+						userMap[player.name].totalScore -= baseDeductionValue
+						userMap[player.name].baseDeductions++
+					else if player.starsAgainst is 0
+						userMap[player.name].totalScore += baseBonusValue
+						userMap[player.name].baseBonuses++
+				else if 0.1*war.size > player.rank >= 0.4*war.size 
+					if player.starsAgainst > 2
+						userMap[player.name].totalScore -= baseDeductionValue
+						userMap[player.name].baseDeductions++
+					else if player.starsAgainst < 2
+						userMap[player.name].totalScore += baseBonusValue
+						userMap[player.name].baseBonuses++
+				else
+					if player.starsAgainst < 3
+						userMap[player.name].totalScore += baseBonusValue
+						userMap[player.name].baseBonuses++				
+	
+	users = []
+	for k,v of userMap
+		users.push v
+		
+	averageWarCount = users.map((u) -> u.warCount).mean()
+	
+	for user in users
+		user.averageRank = user.myRankSum/user.warCount
+		user.averageOpponentRank = user.opponentRankSum/user.attackCount
+		user.averageNewStars = user.newStars/user.attackCount
+		user.averageTotalStars = user.totalStars/user.attackCount
+		user.averageRankDifference = user.averageRank - user.averageOpponentRank
+		user.score = parseFloat (user.totalScore/averageWarCount).toFixed(2)
+	
+	stats = {}
+	stats.medianRankDifference = users.map((u) -> u.averageRankDifference).median()
+	stats.mad = ss.mad users.map((u) -> u.averageRankDifference)
+	#stats.iqr = ss.interquartile_range(users.map((u) -> u.averageRankDifference))
+#		console.dir stats
+	
+	users.sort (a,b) ->
+		if a.score > b.score
+			return -1
+		else if a.score < b.score
+			return 1
+		else
+			if a.averageRank > b.averageRank
+				return -1
+			else
+				return 1
+		
+	console.log "Using Wars:",warNames
+#		console.dir users
+	for user in users
+		console.log user.name
+		console.log "\tAverage Rank Diff: #{if user.averageRankDifference >= 0 then '+' else ''}#{user.averageRankDifference.toFixed(2)}"
+		console.log "\tBase Bonuses: #{user.baseBonuses}" if user.baseBonuses > 0
+		console.log "\tBase Deductions: #{user.baseDeductions}" if user.baseDeductions > 0
+		console.log "\tScore: #{if user.score >= 0 then '+' else ''}#{user.score}"
+		
+	console.log "Out of Bounds Attackers:",users.filter((u) -> u.illegalAttacks > u.warCount/2).sort((a,b) ->
+		if a.illegalAttacks > b.illegalAttacks
+			return -1
+		else if a.illegalAttacks < b.illegalAttacks
+			return 1
+		else
+			if a.averageRank > b.averageRank
+				return -1
+			else
+				return 1
+	).map((u) -> "#{u.name}: #{u.illegalAttacks}")
+		
+	cb0 null
 		
 if process.argv[2] is "--new-war"
 
@@ -93,155 +238,33 @@ else if process.argv[2] is "--analyze"
 	paths = process.argv.slice 3,process.argv.length
 	readFiles paths, (err,wars) ->
 		handleError err
+		analyzeWars wars, ->
+			process.exit 0
 		
-		userMap = {}
-		warNames = []
 		
-		for war in wars
+else if process.argv[2] is "--analyze-all"
+
+	fs.readdir ".",(err,paths) ->
+		
+		paths = paths.filter (f) ->
+			f.endsWith(".json") and not (f in ["package.json","bower.json"])
 			
-			warNames.push war.opponent
-			war.targetStars = targetStarMultiplier * war.size
-			painLevel = if war.outcome then 1 else warLossMultiplier
+		readFiles paths, (err,wars) ->
+			handleError err
+			analyzeWars wars, ->
+				process.exit 0
+				
+else if process.argv[2] is "--analyze-recent"
+
+	fs.readdir ".",(err,paths) ->
+		
+		paths = paths.filter (f) ->
+			f.endsWith(".json") and not (f in ["package.json","bower.json"])
 			
-			for player in war.players
-				if not (player.name in exclusionList)
-					player.percentile = player.rank/war.size
-					
-					if not userMap[player.name]?
-						userMap[player.name] = 
-							name: player.name
-							totalStars: 0
-							newStars: 0
-							zeroStarAttacks: 0
-							threeStarAttacks: 0
-							attacksMissed: 0
-							warCount: 0
-							attackCount: 0
-							myRankSum: 0
-							opponentRankSum: 0
-							illegalAttacks: 0
-							totalScore: 0
-							baseDeductions: 0
-							baseBonuses: 0
-							
-					userMap[player.name].warCount++
-					userMap[player.name].myRankSum += player.rank
-					
-					if player.attacks.length < 2
-						diff = 2 - player.attacks.length
-						userMap[player.name].attacksMissed += diff						
-						userMap[player.name].totalScore -= diff*missedAttackValue*painLevel
-						
-					for attack in player.attacks
-						userMap[player.name].attackCount++
-						if attack.totalStars is 0
-							userMap[player.name].zeroStarAttacks++
-						else if attack.totalStars is 3
-							userMap[player.name].threeStarAttacks++
-						userMap[player.name].opponentRankSum += attack.opponentRank
-						userMap[player.name].totalStars += attack.totalStars
-						userMap[player.name].newStars += attack.newStars
-						
-						attack.illegal = false
-						if player.percentile < 0.2
-							# TOP END
-							attack.illegal = attack.illegal || attack.opponentRank > player.rank + war.size*0.3
-							if not attack.illegal and attack.totalStars > 0
-								if player.name is targetPlayerName
-									console.log "Bonus attack up"
-								userMap[player.name].totalScore += topPercentageBonusValue
-						else if player.percentile > 0.8
-							# BOTTOM END
-							attack.illegal = attack.illegal || attack.opponentRank < player.rank - war.size*0.3
-						else
-							# ERRBODY IN BETWEEN
-							attack.illegal = attack.opponentRank <= player.rank and 0.8 > player.percentile > 0.2
-						
-						if attack.illegal
-							userMap[player.name].illegalAttacks++
-					
-					if player.name is targetPlayerName
-						console.log player.attacks.map((a) -> if a.totalStars is 3 then a.totalStars else a.newStars).sum(),'-',player.starsAgainst
-						
-					userMap[player.name].totalScore += player.attacks.map((a) -> if a.totalStars is 3 then a.totalStars else a.newStars).sum() - (player.starsAgainst || 0)
-					
-					if player.rank <= 0.1*war.size 
-						if player.starsAgainst > 1
-							userMap[player.name].totalScore -= baseDeductionValue
-							userMap[player.name].baseDeductions++
-						else if player.starsAgainst is 0
-							userMap[player.name].totalScore += baseBonusValue
-							userMap[player.name].baseBonuses++
-					else if 0.1*war.size > player.rank >= 0.4*war.size 
-						if player.starsAgainst > 2
-							userMap[player.name].totalScore -= baseDeductionValue
-							userMap[player.name].baseDeductions++
-						else if player.starsAgainst < 2
-							userMap[player.name].totalScore += baseBonusValue
-							userMap[player.name].baseBonuses++
-					else
-						if player.starsAgainst < 3
-							userMap[player.name].totalScore += baseBonusValue
-							userMap[player.name].baseBonuses++				
+		readFiles paths, (err,wars) ->
+			handleError err
+			bound = (new Date()).getTime() - 1000*60*60*24*7*parseInt(process.argv[3])
+			wars = wars.filter (w) -> (new Date(w.date)).getTime() > bound
+			analyzeWars wars, ->
+				process.exit 0
 		
-		users = []
-		for k,v of userMap
-			users.push v
-			
-		averageWarCount = users.map((u) -> u.warCount).mean()
-		
-		for user in users
-			user.averageRank = user.myRankSum/user.warCount
-			user.averageOpponentRank = user.opponentRankSum/user.attackCount
-			user.averageNewStars = user.newStars/user.attackCount
-			user.averageTotalStars = user.totalStars/user.attackCount
-			user.averageRankDifference = user.averageRank - user.averageOpponentRank
-			user.score = parseFloat (user.totalScore/averageWarCount).toFixed(2)
-		
-		stats = {}
-		stats.medianRankDifference = users.map((u) -> u.averageRankDifference).median()
-		stats.mad = ss.mad users.map((u) -> u.averageRankDifference)
-		#stats.iqr = ss.interquartile_range(users.map((u) -> u.averageRankDifference))
-#		console.dir stats
-		
-		users.sort (a,b) ->
-			if a.score > b.score
-				return -1
-			else if a.score < b.score
-				return 1
-			else
-				if a.averageRank > b.averageRank
-					return -1
-				else
-					return 1
-			
-		console.log "Using Wars:",warNames
-#		console.dir users
-		for user in users
-			console.log user.name
-			console.log "\tAverage Rank Diff: #{if user.averageRankDifference >= 0 then '+' else ''}#{user.averageRankDifference.toFixed(2)}"
-			console.log "\tBase Bonuses: #{user.baseBonuses}" if user.baseBonuses > 0
-			console.log "\tBase Deductions: #{user.baseDeductions}" if user.baseDeductions > 0
-			console.log "\tScore: #{if user.score >= 0 then '+' else ''}#{user.score}"
-			
-		console.log "Out of Bounds Attackers:",users.filter((u) -> u.illegalAttacks > u.warCount/2).sort((a,b) ->
-			if a.illegalAttacks > b.illegalAttacks
-				return -1
-			else if a.illegalAttacks < b.illegalAttacks
-				return 1
-			else
-				if a.averageRank > b.averageRank
-					return -1
-				else
-					return 1
-		).map((u) -> "#{u.name}: #{u.illegalAttacks}")
-			
-		
-		stats = {}
-		stats.medianRankDifference = users.map((u) -> u.averageRankDifference).median()
-		stats.mad = ss.mad users.map((u) -> u.averageRankDifference)
-		#stats.iqr = ss.interquartile_range(users.map((u) -> u.averageRankDifference))
-#		console.dir stats
-		process.exit 0
-		
-	
