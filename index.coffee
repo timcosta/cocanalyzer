@@ -192,7 +192,7 @@ else if process.argv[2] is "--analyze"
 			user.averageNewStars = user.newStars/user.attackCount
 			user.averageTotalStars = user.totalStars/user.attackCount
 			user.averageRankDifference = user.averageRank - user.averageOpponentRank
-			user.score = (user.totalScore/averageWarCount).toFixed(2)
+			user.score = parseFloat (user.totalScore/averageWarCount).toFixed(2)
 		
 		stats = {}
 		stats.medianRankDifference = users.map((u) -> u.averageRankDifference).median()
