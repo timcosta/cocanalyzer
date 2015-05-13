@@ -14,6 +14,9 @@ targetStarMultiplier = 2.3
 baseDeductionValue = 0.25
 baseBonusValue = 0.5
 missedAttackValue = 0.75
+warLossMultiplier = 1.5
+topPercentageBonusValue = 0.5
+targetPlayerName = ""
 
 handleError = (err) ->
 	if err?
@@ -40,11 +43,12 @@ if process.argv[2] is "--new-war"
 	
 	data = {}
 	
-	prompt.get ['opponent','size'], (err,result) ->
+	prompt.get ['opponent','size','outcome'], (err,result) ->
 		handleError err
 		dataFxns = []
 		data.opponent = result.opponent
 		data.size = parseInt(result.size)
+		data.outcome = result.outcome.toLowerCase() in ['win','w','1','true','t','victory','v']
 		for i in [0...data.size]
 			do (i) ->
 				dataFxns.push (callback) ->
@@ -124,7 +128,11 @@ else if process.argv[2] is "--analyze"
 				if player.attacks.length < 2
 					diff = 2 - player.attacks.length
 					userMap[player.name].attacksMissed += diff
-					userMap[player.name].totalScore -= diff*missedAttackValue
+					painLevel = if war.outcome then 1 else warLossMultiplier
+#					if painLevel > 1
+#						console.log "#{player.name} is in PAIN"
+					
+					userMap[player.name].totalScore -= diff*missedAttackValue*painLevel
 					
 					
 				for attack in player.attacks
@@ -142,7 +150,9 @@ else if process.argv[2] is "--analyze"
 						# TOP END
 						attack.illegal = attack.illegal || attack.opponentRank > player.rank + war.size*0.3
 						if not attack.illegal and attack.totalStars > 0
-							userMap[player.name].totalScore++
+							if player.name is targetPlayerName
+								console.log "Bonus attack up"
+							userMap[player.name].totalScore += topPercentageBonusValue
 					else if player.percentile > 0.8
 						# BOTTOM END
 						attack.illegal = attack.illegal || attack.opponentRank < player.rank - war.size*0.3
@@ -152,7 +162,9 @@ else if process.argv[2] is "--analyze"
 					
 					if attack.illegal
 						userMap[player.name].illegalAttacks++
-						
+				
+				if player.name is targetPlayerName
+					console.log player.attacks.map((a) -> if a.totalStars is 3 then a.totalStars else a.newStars).sum(),'-',player.starsAgainst
 				userMap[player.name].totalScore += player.attacks.map((a) -> if a.totalStars is 3 then a.totalStars else a.newStars).sum() - (player.starsAgainst || 0)
 				
 				if player.rank <= 0.1*war.size 
