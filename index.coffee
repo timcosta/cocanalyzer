@@ -215,10 +215,10 @@ else if process.argv[2] is "--analyze"
 #		console.dir users
 		for user in users
 			console.log user.name
-			console.log "\tAverage Rank Diff: #{user.averageRankDifference}"
+			console.log "\tAverage Rank Diff: #{if user.averageRankDifference >= 0 then '+' else ''}#{user.averageRankDifference}"
 			console.log "\tBase Bonuses: #{user.baseBonuses}" if user.baseBonuses > 0
 			console.log "\tBase Deductions: #{user.baseDeductions}" if user.baseDeductions > 0
-			console.log "\tScore: #{user.score}"
+			console.log "\tScore: #{if user.score >= 0 then '+' else ''}#{user.score}"
 			
 		console.log "Out of Bounds Attackers:",users.filter((u) -> u.illegalAttacks > u.warCount/2).sort((a,b) ->
 			if a.illegalAttacks > b.illegalAttacks
