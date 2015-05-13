@@ -17,6 +17,7 @@ baseBonusValue = 0.5
 missedAttackValue = 0.75
 warLossMultiplier = 1.5
 topPercentageBonusValue = 0.5
+topAttackModifier = 1.5
 targetPlayerName = ""
 
 handleError = (err) ->
@@ -87,10 +88,6 @@ analyzeWars = (wars,cb0) ->
 					if player.percentile < 0.2
 						# TOP END
 						attack.illegal = attack.illegal || attack.opponentRank > player.rank + war.size*0.3
-						if not attack.illegal and attack.totalStars > 0
-							if player.name is targetPlayerName
-								console.log "Bonus attack up"
-							userMap[player.name].totalScore += topPercentageBonusValue
 					else if player.percentile > 0.8
 						# BOTTOM END
 						attack.illegal = attack.illegal || attack.opponentRank < player.rank - war.size*0.3
@@ -104,7 +101,7 @@ analyzeWars = (wars,cb0) ->
 				if player.name is targetPlayerName
 					console.log player.attacks.map((a) -> if a.totalStars is 3 then a.totalStars else a.newStars).sum(),'-',player.starsAgainst
 					
-				userMap[player.name].totalScore += player.attacks.map((a) -> if a.totalStars is 3 then a.totalStars else a.newStars).sum() - (player.starsAgainst || 0)
+				userMap[player.name].totalScore += player.attacks.map((a) -> if a.totalStars is 3 then a.totalStars else a.newStars).sum()*(if player.percentile < 0.2 and attack.opponentRank - player.rank <= player.rank then topAttackModifier else 1) - (player.starsAgainst || 0)
 				
 				if player.rank <= 0.1*war.size 
 					if player.starsAgainst > 1
