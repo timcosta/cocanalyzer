@@ -113,7 +113,7 @@ analyzeWars = (wars,cb0) ->
 					else if player.starsAgainst is 0
 						userMap[player.name].totalScore += baseBonusValue
 						userMap[player.name].baseBonuses++
-				else if 0.1*war.size > player.rank >= 0.4*war.size 
+				else if 0.1*war.size < player.rank <= 0.4*war.size 
 					if player.starsAgainst > 2
 						userMap[player.name].totalScore -= baseDeductionValue
 						userMap[player.name].baseDeductions++
@@ -138,13 +138,7 @@ analyzeWars = (wars,cb0) ->
 		user.averageTotalStars = user.totalStars/user.attackCount
 		user.averageRankDifference = user.averageRank - user.averageOpponentRank
 		user.score = parseFloat (user.totalScore/averageWarCount).toFixed(2)
-	
-	stats = {}
-	stats.medianRankDifference = users.map((u) -> u.averageRankDifference).median()
-	stats.mad = ss.mad users.map((u) -> u.averageRankDifference)
-	#stats.iqr = ss.interquartile_range(users.map((u) -> u.averageRankDifference))
-#		console.dir stats
-	
+		
 	users.sort (a,b) ->
 		if a.score > b.score
 			return -1
@@ -157,9 +151,16 @@ analyzeWars = (wars,cb0) ->
 				return 1
 		
 	console.log "Using Wars:",warNames
-#		console.dir users
+	
+	currentRank = 0
+	lastScore = 1000000000000000000000000
+	totalUsers = 0
 	for user in users
-		console.log user.name
+		totalUsers++
+		if user.score < lastScore
+			lastScore = user.score
+			currentRank = totalUsers
+		console.log "#{currentRank}:",user.name
 		console.log "\tAverage Rank Diff: #{if user.averageRankDifference >= 0 then '+' else ''}#{user.averageRankDifference.toFixed(2)}"
 		console.log "\tBase Bonuses: #{user.baseBonuses}" if user.baseBonuses > 0
 		console.log "\tBase Deductions: #{user.baseDeductions}" if user.baseDeductions > 0

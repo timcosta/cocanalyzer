@@ -1,0 +1,110 @@
+	Using Wars: [ 'ARM\'s Revenge', 'newb' ]
+	1: DCooksley
+		Average Rank Diff: -2.50
+		Base Bonuses: 1
+		Score: +4.71
+	1: Matt
+		Average Rank Diff: -2.00
+		Base Bonuses: 1
+		Score: +4.71
+	3: TJ
+		Average Rank Diff: -1.50
+		Base Bonuses: 1
+		Score: +3.45
+	4: theBurricane
+		Average Rank Diff: -1.50
+		Score: +3.14
+	4: Wade
+		Average Rank Diff: -2.00
+		Score: +3.14
+	6: Cabera
+		Average Rank Diff: -3.00
+		Base Bonuses: 1
+		Score: +2.83
+	6: Yoloswag
+		Average Rank Diff: -3.50
+		Base Bonuses: 1
+		Score: +2.83
+	8: Dr.Rogers
+		Average Rank Diff: -2.75
+		Base Bonuses: 1
+		Score: +2.2
+	9: galactii
+		Average Rank Diff: -2.75
+		Score: +1.88
+	10: billness
+		Average Rank Diff: -1.25
+		Base Deductions: 1
+		Score: +1.73
+	10: Terd Fergeson
+		Average Rank Diff: -0.50
+		Base Deductions: 1
+		Score: +1.73
+	12: Kim Jong Un
+		Average Rank Diff: +6.50
+		Base Bonuses: 1
+		Score: +1.57
+	12: Pwnercycle
+		Average Rank Diff: -1.00
+		Base Bonuses: 1
+		Score: +1.57
+	12: Sarge
+		Average Rank Diff: -1.00
+		Base Bonuses: 1
+		Score: +1.57
+	15: Civil
+		Average Rank Diff: -0.50
+		Score: +1.26
+	15: Doughboy
+		Average Rank Diff: -3.00
+		Base Deductions: 2
+		Score: +1.26
+	15: thetruejew
+		Average Rank Diff: -1.50
+		Base Bonuses: 1
+		Score: +1.26
+	18: King Talon
+		Average Rank Diff: +1.00
+		Base Bonuses: 1
+		Score: +0.94
+	19: Klausenlieber
+		Average Rank Diff: -0.50
+		Base Deductions: 1
+		Score: +0.78
+	20: Spear
+		Average Rank Diff: +0.50
+		Score: +0.63
+	21: Navira
+		Average Rank Diff: -1.75
+		Base Bonuses: 1
+		Score: +0.31
+	22: Zer0
+		Average Rank Diff: +3.50
+		Score: +0
+	23: Roll9ers
+		Average Rank Diff: +0.00
+		Base Bonuses: 1
+		Score: -0.78
+	24: Kaegan
+		Average Rank Diff: +10.75
+		Base Bonuses: 1
+		Score: -0.94
+	25: Great Brandeezy
+		Average Rank Diff: +1.00
+		Score: -1.33
+	26: Mojo
+		Average Rank Diff: +0.25
+		Score: -2.51
+	27: bullfrog
+		Average Rank Diff: +2.25
+		Score: -3.14
+	Out of Bounds Attackers: [ 'Mojo: 3',
+	  'Kaegan: 2',
+	  'Spear: 2',
+	  'Sarge: 2',
+	  'Kim Jong Un: 1',
+	  'Zer0: 1',
+	  'Roll9ers: 1',
+	  'TJ: 1',
+	  'Pwnercycle: 1',
+	  'Civil: 1' ]
