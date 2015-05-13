@@ -1,9 +1,15 @@
 This script can be used to analyze CoC wars for player effectiveness
 
+
 --new-war: Allows the user to create a new war data file
+node index.js --new-war
 
 --analyze: analyze war files listed after --analyze
+node index.js --analyze <list of json files>
+node index.js --analyze newb.json ARMs_Revenge.json
 
 --analyze-all: analyze all war files found
+not implemented
 
 --analyze-recent: analyze the past 3 weeks worth of wars
+not implemented
