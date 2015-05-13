@@ -1,0 +1,13 @@
+node_modules/
+builtAssets/
+bower_components/
+*.log
+*.rdb
+.env.prod
+.env
+.env.staging
+csvs/
+build/*
+dist/*
+dist-rev/*
+deploy.sh
