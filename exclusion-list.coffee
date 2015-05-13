@@ -1,0 +1,3 @@
+module.exports = [
+	"EX Rider"
+]
