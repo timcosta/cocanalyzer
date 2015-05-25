@@ -7,7 +7,7 @@ ss.mixin()
 
 prompt = require("prompt")
 async = require 'async'
-exclusionList = require "#{__dirname}/exclusion-list"
+playerMap = require "#{__dirname}/player-map"
 	
 fs = require 'fs'
 
@@ -19,6 +19,12 @@ warLossMultiplier = 1.5
 topPercentageBonusValue = 0.5
 topAttackModifier = 1.5
 targetPlayerName = ""
+
+if "--target-player" in process.argv
+	targetPlayerName = process.argv[process.argv.indexOf("--target-player") + 1]
+
+if targetPlayerName?.length > 0
+	console.log "Analyzing",targetPlayerName
 
 handleError = (err) ->
 	if err?
@@ -40,13 +46,18 @@ analyzeWars = (wars,cb0) ->
 	warNames = []
 	
 	for war in wars
+	
+		if targetPlayerName?.length > 0
+			console.log war.opponent
 		
 		warNames.push war.opponent
 		war.targetStars = targetStarMultiplier * war.size
 		painLevel = if war.outcome then 1 else warLossMultiplier
 		
 		for player in war.players
-			if not (player.name in exclusionList)
+			if playerMap.renamed[player.name]?
+				player.name = playerMap.renamed[player.name]
+			if not (player.name in playerMap.kicked)
 				player.percentile = player.rank/war.size
 				
 				if not userMap[player.name]?
@@ -104,14 +115,13 @@ analyzeWars = (wars,cb0) ->
 				userMap[player.name].totalScore += player.attacks.map((a) -> if a.totalStars is 3 then a.totalStars else a.newStars).sum()*(if player.percentile < 0.2 and attack.opponentRank - player.rank <= player.rank then topAttackModifier else 1) - (player.starsAgainst || 0)
 				
 				if player.rank <= 0.1*war.size 
-					if player.starsAgainst > 1
-						userMap[player.name].totalScore -= baseDeductionValue
-						userMap[player.name].baseDeductions++
-					else if player.starsAgainst is 0
+					if player.starsAgainst is 0
 						userMap[player.name].totalScore += baseBonusValue
 						userMap[player.name].baseBonuses++
 				else if 0.1*war.size < player.rank <= 0.4*war.size 
 					if player.starsAgainst > 2
+						if player.name is targetPlayerName
+							console.log "Base deduction"
 						userMap[player.name].totalScore -= baseDeductionValue
 						userMap[player.name].baseDeductions++
 					else if player.starsAgainst < 2
@@ -134,7 +144,7 @@ analyzeWars = (wars,cb0) ->
 		user.averageNewStars = user.newStars/user.attackCount
 		user.averageTotalStars = user.totalStars/user.attackCount
 		user.averageRankDifference = user.averageRank - user.averageOpponentRank
-		user.score = parseFloat (user.totalScore/averageWarCount).toFixed(2)
+		user.score = parseFloat (user.totalScore/user.warCount).toFixed(2)
 		
 	users.sort (a,b) ->
 		if a.score > b.score
@@ -157,11 +167,12 @@ analyzeWars = (wars,cb0) ->
 		if user.score < lastScore
 			lastScore = user.score
 			currentRank = totalUsers
-		console.log "#{currentRank}:",user.name
-		console.log "\tAverage Rank Diff: #{if user.averageRankDifference >= 0 then '+' else ''}#{user.averageRankDifference.toFixed(2)}"
-		console.log "\tBase Bonuses: #{user.baseBonuses}" if user.baseBonuses > 0
-		console.log "\tBase Deductions: #{user.baseDeductions}" if user.baseDeductions > 0
-		console.log "\tScore: #{if user.score >= 0 then '+' else ''}#{user.score}"
+		if not (targetPlayerName?.length > 0)
+			console.log "#{currentRank}:",user.name
+			console.log "\tAverage Rank Diff: #{if user.averageRankDifference >= 0 then '+' else ''}#{user.averageRankDifference.toFixed(2)}"
+			console.log "\tBase Bonuses - Deductions: #{user.baseBonuses} - #{user.baseDeductions} = #{user.baseBonuses - user.baseDeductions}"
+			console.log "\tWar Participation: #{user.warCount}/#{wars.length}"
+			console.log "\tScore: #{if user.score >= 0 then '+' else ''}#{user.score}"
 		
 	console.log "Out of Bounds Attackers:",users.filter((u) -> u.illegalAttacks > u.warCount/2).sort((a,b) ->
 		if a.illegalAttacks > b.illegalAttacks
@@ -177,7 +188,7 @@ analyzeWars = (wars,cb0) ->
 		
 	cb0 null
 		
-if process.argv[2] is "--new-war"
+if "--new-war" in process.argv
 
 	prompt.message = ""
 	prompt.delimeter = ""
@@ -232,7 +243,7 @@ if process.argv[2] is "--new-war"
 				fs.writeFileSync results.destinationFile, JSON.stringify(data)
 				process.exit 0
 				
-else if process.argv[2] is "--analyze"
+else if "--analyze" in process.argv
 	paths = process.argv.slice 3,process.argv.length
 	readFiles paths, (err,wars) ->
 		handleError err
@@ -240,7 +251,7 @@ else if process.argv[2] is "--analyze"
 			process.exit 0
 		
 		
-else if process.argv[2] is "--analyze-all"
+else if "--analyze-all" in process.argv
 
 	fs.readdir ".",(err,paths) ->
 		
@@ -252,7 +263,7 @@ else if process.argv[2] is "--analyze-all"
 			analyzeWars wars, ->
 				process.exit 0
 				
-else if process.argv[2] is "--analyze-recent"
+else if "--analyze-recent" in process.argv
 
 	fs.readdir ".",(err,paths) ->
 		
@@ -265,4 +276,6 @@ else if process.argv[2] is "--analyze-recent"
 			wars = wars.filter (w) -> (new Date(w.date)).getTime() > bound
 			analyzeWars wars, ->
 				process.exit 0
-		
+
+else
+	console.log "Invalid start up options."

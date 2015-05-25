@@ -1,110 +1,218 @@
-	Using Wars: [ 'ARM\'s Revenge', 'newb' ]
-	1: DCooksley
-		Average Rank Diff: -2.50
-		Base Bonuses: 1
-		Score: +4.71
-	1: Matt
-		Average Rank Diff: -2.00
-		Base Bonuses: 1
-		Score: +4.71
-	3: TJ
-		Average Rank Diff: -1.50
-		Base Bonuses: 1
-		Score: +3.45
-	4: theBurricane
-		Average Rank Diff: -1.50
-		Score: +3.14
-	4: Wade
-		Average Rank Diff: -2.00
-		Score: +3.14
-	6: Cabera
+	Starting Reddit Hounds CoC Analyzer...
+	Using Wars: [ 'ARM\'s Revenge',
+	  'Dark Thieves 2',
+	  'Hades Exiles',
+	  'LEGIONARIOS',
+	  'Magiwar',
+	  'asian-5-14',
+	  'newb' ]
+	1: thetruejew
+		Average Rank Diff: -0.83
+		Base Bonuses - Deductions: 2 - 0 = 2
+		War Participation: 3/7
+		Score: +4
+	1: SuperTramp
+		Average Rank Diff: -1.38
+		Base Bonuses - Deductions: 4 - 0 = 4
+		War Participation: 4/7
+		Score: +4
+	3: Doughboy
 		Average Rank Diff: -3.00
-		Base Bonuses: 1
-		Score: +2.83
-	6: Yoloswag
-		Average Rank Diff: -3.50
-		Base Bonuses: 1
-		Score: +2.83
-	8: Dr.Rogers
-		Average Rank Diff: -2.75
-		Base Bonuses: 1
-		Score: +2.2
-	9: galactii
-		Average Rank Diff: -2.75
-		Score: +1.88
-	10: billness
-		Average Rank Diff: -1.25
-		Base Deductions: 1
-		Score: +1.73
+		Base Bonuses - Deductions: 1 - 0 = 1
+		War Participation: 4/7
+		Score: +3.88
+	4: Dartstrip
+		Average Rank Diff: -0.90
+		Base Bonuses - Deductions: 3 - 0 = 3
+		War Participation: 5/7
+		Score: +3.3
+	5: B-Rad
+		Average Rank Diff: -2.67
+		Base Bonuses - Deductions: 2 - 1 = 1
+		War Participation: 3/7
+		Score: +3.25
+	6: Matt
+		Average Rank Diff: -2.80
+		Base Bonuses - Deductions: 1 - 1 = 0
+		War Participation: 5/7
+		Score: +2.75
+	7: SCaroina Pride
+		Average Rank Diff: +1.17
+		Base Bonuses - Deductions: 3 - 0 = 3
+		War Participation: 3/7
+		Score: +2.5
+	8: Klausenlieber
+		Average Rank Diff: -0.64
+		Base Bonuses - Deductions: 2 - 1 = 1
+		War Participation: 7/7
+		Score: +2.46
+	9: team virgins
+		Average Rank Diff: -5.17
+		Base Bonuses - Deductions: 2 - 0 = 2
+		War Participation: 3/7
+		Score: +2.33
 	10: Terd Fergeson
-		Average Rank Diff: -0.50
-		Base Deductions: 1
-		Score: +1.73
-	12: Kim Jong Un
-		Average Rank Diff: +6.50
-		Base Bonuses: 1
-		Score: +1.57
-	12: Pwnercycle
-		Average Rank Diff: -1.00
-		Base Bonuses: 1
-		Score: +1.57
-	12: Sarge
-		Average Rank Diff: -1.00
-		Base Bonuses: 1
-		Score: +1.57
-	15: Civil
-		Average Rank Diff: -0.50
-		Score: +1.26
-	15: Doughboy
-		Average Rank Diff: -3.00
-		Base Deductions: 2
-		Score: +1.26
-	15: thetruejew
+		Average Rank Diff: -2.38
+		Base Bonuses - Deductions: 0 - 0 = 0
+		War Participation: 4/7
+		Score: +2.25
+	11: theBurricane
+		Average Rank Diff: +0.71
+		Base Bonuses - Deductions: 3 - 0 = 3
+		War Participation: 7/7
+		Score: +2.21
+	12: Wade
+		Average Rank Diff: -3.21
+		Base Bonuses - Deductions: 2 - 0 = 2
+		War Participation: 7/7
+		Score: +2.14
+	13: Sammy123419
+		Average Rank Diff: -2.10
+		Base Bonuses - Deductions: 3 - 0 = 3
+		War Participation: 5/7
+		Score: +2.1
+	14: billness
 		Average Rank Diff: -1.50
-		Base Bonuses: 1
-		Score: +1.26
-	18: King Talon
-		Average Rank Diff: +1.00
-		Base Bonuses: 1
-		Score: +0.94
-	19: Klausenlieber
-		Average Rank Diff: -0.50
-		Base Deductions: 1
-		Score: +0.78
-	20: Spear
-		Average Rank Diff: +0.50
+		Base Bonuses - Deductions: 0 - 1 = -1
+		War Participation: 5/7
+		Score: +1.95
+	15: DCooksley
+		Average Rank Diff: -0.07
+		Base Bonuses - Deductions: 4 - 0 = 4
+		War Participation: 7/7
+		Score: +1.86
+	15: Galactii
+		Average Rank Diff: -2.71
+		Base Bonuses - Deductions: 2 - 0 = 2
+		War Participation: 7/7
+		Score: +1.86
+	17: tagzurit
+		Average Rank Diff: -2.75
+		Base Bonuses - Deductions: 1 - 0 = 1
+		War Participation: 2/7
+		Score: +1.75
+	18: Spear
+		Average Rank Diff: +0.43
+		Base Bonuses - Deductions: 1 - 1 = 0
+		War Participation: 7/7
+		Score: +1.61
+	19: Civil
+		Average Rank Diff: -0.80
+		Base Bonuses - Deductions: 0 - 1 = -1
+		War Participation: 5/7
+		Score: +1.55
+	20: Lucky
+		Average Rank Diff: -2.00
+		Base Bonuses - Deductions: 2 - 0 = 2
+		War Participation: 4/7
+		Score: +1.5
+	20: Dr.Rogers
+		Average Rank Diff: -3.90
+		Base Bonuses - Deductions: 1 - 0 = 1
+		War Participation: 5/7
+		Score: +1.5
+	20: Yoloswag
+		Average Rank Diff: -3.83
+		Base Bonuses - Deductions: 1 - 0 = 1
+		War Participation: 3/7
+		Score: +1.5
+	23: Kim Jong Un
+		Average Rank Diff: +2.70
+		Base Bonuses - Deductions: 2 - 0 = 2
+		War Participation: 5/7
+		Score: +1.2
+	24: dan walsh
+		Average Rank Diff: -5.83
+		Base Bonuses - Deductions: 0 - 0 = 0
+		War Participation: 3/7
+		Score: +1
+	24: -zero-
+		Average Rank Diff: -2.50
+		Base Bonuses - Deductions: 0 - 0 = 0
+		War Participation: 1/7
+		Score: +1
+	26: TJ
+		Average Rank Diff: -0.80
+		Base Bonuses - Deductions: 1 - 0 = 1
+		War Participation: 5/7
+		Score: +0.95
+	27: Navira
+		Average Rank Diff: -1.64
+		Base Bonuses - Deductions: 2 - 0 = 2
+		War Participation: 7/7
+		Score: +0.86
+	28: Pwnercycle
+		Average Rank Diff: -1.83
+		Base Bonuses - Deductions: 1 - 0 = 1
+		War Participation: 3/7
+		Score: +0.83
+	29: Zer0
+		Average Rank Diff: +4.33
+		Base Bonuses - Deductions: 3 - 0 = 3
+		War Participation: 6/7
+		Score: +0.75
+	30: King Talon
+		Average Rank Diff: +3.75
+		Base Bonuses - Deductions: 3 - 0 = 3
+		War Participation: 4/7
 		Score: +0.63
-	21: Navira
-		Average Rank Diff: -1.75
-		Base Bonuses: 1
-		Score: +0.31
-	22: Zer0
-		Average Rank Diff: +3.50
-		Score: +0
-	23: Roll9ers
-		Average Rank Diff: +0.00
-		Base Bonuses: 1
-		Score: -0.78
-	24: Kaegan
-		Average Rank Diff: +10.75
-		Base Bonuses: 1
-		Score: -0.94
-	25: Great Brandeezy
-		Average Rank Diff: +1.00
-		Score: -1.33
-	26: Mojo
-		Average Rank Diff: +0.25
-		Score: -2.51
-	27: bullfrog
+	30: tacoLover
+		Average Rank Diff: -3.00
+		Base Bonuses - Deductions: 1 - 1 = 0
+		War Participation: 2/7
+		Score: +0.63
+	32: Sarge
+		Average Rank Diff: -2.58
+		Base Bonuses - Deductions: 1 - 0 = 1
+		War Participation: 6/7
+		Score: +0.58
+	33: Ronintoadin
+		Average Rank Diff: +4.57
+		Base Bonuses - Deductions: 4 - 0 = 4
+		War Participation: 7/7
+		Score: +0.57
+	34: matt
+		Average Rank Diff: -5.50
+		Base Bonuses - Deductions: 1 - 0 = 1
+		War Participation: 5/7
+		Score: -0.3
+	35: Cabera
+		Average Rank Diff: -2.02
+		Base Bonuses - Deductions: 1 - 0 = 1
+		War Participation: 5/7
+		Score: -0.45
+	36: TJv2
 		Average Rank Diff: +2.25
-		Score: -3.14
-	Out of Bounds Attackers: [ 'Mojo: 3',
-	  'Kaegan: 2',
-	  'Spear: 2',
-	  'Sarge: 2',
-	  'Kim Jong Un: 1',
-	  'Zer0: 1',
-	  'Roll9ers: 1',
-	  'TJ: 1',
-	  'Pwnercycle: 1',
-	  'Civil: 1' ]
+		Base Bonuses - Deductions: 0 - 0 = 0
+		War Participation: 2/7
+		Score: -0.5
+	37: Chairface
+		Average Rank Diff: -5.50
+		Base Bonuses - Deductions: 0 - 0 = 0
+		War Participation: 1/7
+		Score: -1
+	38: bullfrog
+		Average Rank Diff: +6.00
+		Base Bonuses - Deductions: 3 - 0 = 3
+		War Participation: 5/7
+		Score: -1.3
+	39: Roll9ers
+		Average Rank Diff: -2.63
+		Base Bonuses - Deductions: 2 - 0 = 2
+		War Participation: 6/7
+		Score: -1.42
+	40: Chris
+		Average Rank Diff: +2.33
+		Base Bonuses - Deductions: 0 - 0 = 0
+		War Participation: 3/7
+		Score: -1.5
+	41: Mojo
+		Average Rank Diff: -0.88
+		Base Bonuses - Deductions: 0 - 0 = 0
+		War Participation: 4/7
+		Score: -1.75
+	42: Great Brandeezy
+		Average Rank Diff: +1.00
+		Base Bonuses - Deductions: 0 - 0 = 0
+		War Participation: 2/7
+		Score: -2.44
