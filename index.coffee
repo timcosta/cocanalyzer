@@ -20,7 +20,7 @@ topPercentageBonusValue = 0.5
 topAttackModifier = 1.5
 targetPlayerName = ""
 
-if "--target-player" in process.argv
+if "--target-player" in process.argv and targetPlayerName.length is 0
 	targetPlayerName = process.argv[process.argv.indexOf("--target-player") + 1]
 
 if targetPlayerName?.length > 0
@@ -84,8 +84,11 @@ analyzeWars = (wars,cb0) ->
 					diff = 2 - player.attacks.length
 					userMap[player.name].attacksMissed += diff						
 					userMap[player.name].totalScore -= diff*missedAttackValue*painLevel
-					
+				if player.name is targetPlayerName
+					console.log "\tRank: #{player.rank}"
 				for attack in player.attacks
+					if player.name is targetPlayerName
+						console.log "\tAttacked #{attack.opponentRank}"
 					userMap[player.name].attackCount++
 					if attack.totalStars is 0
 						userMap[player.name].zeroStarAttacks++
@@ -110,25 +113,30 @@ analyzeWars = (wars,cb0) ->
 						userMap[player.name].illegalAttacks++
 				
 				if player.name is targetPlayerName
-					console.log player.attacks.map((a) -> if a.totalStars is 3 then a.totalStars else a.newStars).sum(),'-',player.starsAgainst
-					
-				userMap[player.name].totalScore += player.attacks.map((a) -> if a.totalStars is 3 then a.totalStars else a.newStars).sum()*(if player.percentile < 0.2 and attack.opponentRank - player.rank <= player.rank then topAttackModifier else 1) - (player.starsAgainst || 0)
+					console.log "\tBase: ",player.attacks.map((a) -> if a.totalStars is 3 then a.totalStars else a.newStars).sum(),'-',player.starsAgainst,'=',player.attacks.map((a) -> if ((a.totalStars is 3) and (a.newStars > 0)) then a.totalStars else a.newStars).sum() - (player.starsAgainst)
+				userMap[player.name].totalScore += player.attacks.map((a) -> if ((a.totalStars is 3) and (a.newStars > 0)) then a.totalStars else a.newStars).sum()*(if player.percentile < 0.2 and attack.opponentRank - player.rank <= player.rank then topAttackModifier else 1) - (player.starsAgainst)
 				
 				if player.rank <= 0.1*war.size 
 					if player.starsAgainst is 0
+						if player.name is targetPlayerName
+							console.log "\tBase bonus"
 						userMap[player.name].totalScore += baseBonusValue
 						userMap[player.name].baseBonuses++
 				else if 0.1*war.size < player.rank <= 0.4*war.size 
 					if player.starsAgainst > 2
 						if player.name is targetPlayerName
-							console.log "Base deduction"
+							console.log "\tBase deduction"
 						userMap[player.name].totalScore -= baseDeductionValue
 						userMap[player.name].baseDeductions++
 					else if player.starsAgainst < 2
+						if player.name is targetPlayerName
+							console.log "\tBase bonus"
 						userMap[player.name].totalScore += baseBonusValue
 						userMap[player.name].baseBonuses++
 				else
 					if player.starsAgainst < 3
+						if player.name is targetPlayerName
+							console.log "\tBase bonus"
 						userMap[player.name].totalScore += baseBonusValue
 						userMap[player.name].baseBonuses++				
 	
@@ -156,8 +164,6 @@ analyzeWars = (wars,cb0) ->
 				return -1
 			else
 				return 1
-		
-	console.log "Using Wars:",warNames
 	
 	currentRank = 0
 	lastScore = 1000000000000000000000000
@@ -167,13 +173,17 @@ analyzeWars = (wars,cb0) ->
 		if user.score < lastScore
 			lastScore = user.score
 			currentRank = totalUsers
-		if not (targetPlayerName?.length > 0)
+		if not (targetPlayerName?.length > 0) or user.name is targetPlayerName
 			console.log "#{currentRank}:",user.name
+			if user.name is targetPlayerName
+				console.log "\tRaw: #{user.totalScore}"
 			console.log "\tAverage Rank Diff: #{if user.averageRankDifference >= 0 then '+' else ''}#{user.averageRankDifference.toFixed(2)}"
 			console.log "\tBase Bonuses - Deductions: #{user.baseBonuses} - #{user.baseDeductions} = #{user.baseBonuses - user.baseDeductions}"
 			console.log "\tWar Participation: #{user.warCount}/#{wars.length}"
 			console.log "\tScore: #{if user.score >= 0 then '+' else ''}#{user.score}"
 		
+	console.log "Using Wars:",warNames
+	
 	console.log "Out of Bounds Attackers:",users.filter((u) -> u.illegalAttacks > u.warCount/2).sort((a,b) ->
 		if a.illegalAttacks > b.illegalAttacks
 			return -1
