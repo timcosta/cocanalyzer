@@ -6,6 +6,7 @@ module.exports =
 		"Overclocked"
 		"team virgins"
 		"matt"
+		"Lucky"
 	]
 	renamed: 
 		"Kaegan": "Ronintoadin"
